@@ -7,7 +7,7 @@
 ----- Q1. What are the different tables in the database and how are they connected to each other in the database?
 
 
-/* Ans. The database contains the following tables:
+Ans. The database contains the following tables:
 
 1. movie: This table stores information about movies. It has a primary key `id` and columns such as `title`, `year`, `date_published`, `duration`, `country`, `worlwide_gross_income`, `languages`, and `production_company`.
 2. genre: This table represents the genres of movies. It has a composite primary key `(movie_id, genre)` and contains the movie ID and genre for each movie.
@@ -20,7 +20,7 @@ The `movie_id` column in the genre, director_mapping, and role_mapping tables re
 The `name_id` column in the director_mapping and role_mapping tables references the `id` column in the names table. 
 These relationships allow for the association of movies with genres, directors, and actors/actresses.
 
-*/
+
 
 ----- Q2. Find the total number of rows in each table of the schema.
 
