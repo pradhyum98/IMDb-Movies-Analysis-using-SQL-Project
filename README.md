@@ -38,11 +38,13 @@ SELECT COUNT(*) AS total_rows FROM ratings; --- 7997 rows
 
 SELECT 
     column_name
-FROM information_schema.columns
+FROM information_schema.columns     
 WHERE table_name = 'movie'
     AND is_nullable = 'YES';
     
---- Ans:-  Column Names: languages, production_company, title, worldwide_gross_income, year
+--- Ans:-  column Names: languages, production_company , title, worldwide_gross_income , year
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
 
