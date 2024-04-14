@@ -227,7 +227,9 @@ median_rating	movie_count
 */
 
 
+
 ----- Q4. Identify the production house that has produced the most number of hit movies (average rating > 8).
+
 
 
 SELECT COUNT(movie.id) AS hit_movie_count, movie.production_company, AVG(ratings.avg_rating) AS average_rating
@@ -396,6 +398,8 @@ GROUP BY names.name
 ORDER BY average_rating DESC;
 
 ----- Q6. Identify the top five actresses in Hindi movies released in India based on their average ratings.
+
+
 SELECT names.name AS actress_name, AVG(ratings.avg_rating) AS average_rating
 FROM movie
 INNER JOIN role_mapping ON movie.id = role_mapping.movie_id
@@ -405,6 +409,8 @@ WHERE movie.country = 'India' AND movie.languages LIKE '%Hindi%' AND role_mappin
 GROUP BY names.name
 ORDER BY average_rating DESC
 LIMIT 5;
+
+
 /* Ans:
 actress_name		average_rating
 Pranati Rai Prakash	9.4
@@ -414,9 +420,16 @@ Bhairavi Athavle	8.4
 Radhika Apte		8.4
 */
 
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 ------- SEGMENT 6: Broader Understanding of Data
+
+
 ----- Q1. Classify thriller movies based on average ratings into different categories.
+
+
 SELECT
     movie.title AS movie_title,
     ratings.avg_rating AS average_rating,
@@ -435,7 +448,11 @@ WHERE
 ORDER BY
     ratings.avg_rating DESC;
 
+    
+
 ----- Q2. analyse the genre-wise running total and moving average of the average movie duration.
+
+
 SELECT
     genre.genre AS movie_genre,
     movie.duration AS movie_duration,
@@ -449,7 +466,10 @@ GROUP BY
 ORDER BY
     genre.genre, movie.year;
 
+
 ----- Q3. Identify the five highest-grossing movies of each year that belong to the top three genres.
+
+
 WITH top_three_genres AS (
     SELECT genre, COUNT(*) AS movie_count
     FROM genre
@@ -469,7 +489,11 @@ FROM highest_grossing_movies
 WHERE `rank` <= 5
 ORDER BY year, genre, `rank`;
 
+
+
 ----- Q4. Determine the top two production houses that have produced the highest number of hits among multilingual movies.
+
+
 WITH hit_movies AS (
     SELECT m.production_company, COUNT(*) AS hit_count
     FROM movie m
@@ -487,8 +511,13 @@ top_production_houses AS (
 SELECT production_company, hit_count
 FROM top_production_houses;
 
+
+
 --- Ans: A24:- 7 || Warner Bros. :- 6
+
+
 ----- Q5. Identify the top three actresses based on the number of Super Hit movies (average rating > 8) in the drama genre.
+
 
 WITH super_hit_drama_movies AS (
     SELECT m.id AS movie_id, m.title, r.avg_rating
@@ -519,8 +548,14 @@ SELECT name, movie_count
 FROM ranked_actresses
 WHERE `rank` <= 3;
 
+
+
 ---- Option 2
+
+
 -- Query to identify the top three actresses based on the number of Super Hit movies (average rating > 8) in the drama genre
+
+
 
 SELECT a.name, COUNT(*) AS movie_count
 FROM movie m
@@ -535,13 +570,19 @@ GROUP BY a.name
 ORDER BY movie_count DESC
 LIMIT 3;
 
+
+
 /* Ans:
 name				movie_count
 Parvathy Thiruvothu	2
 Susan Brown			2
 Amanda Lawrence		2
 */
+
+
 ----- Q6. Retrieve details for the top nine directors based on the number of movies, including average inter-movie duration, ratings, and more.
+
+
 WITH director_movie_count AS (
     SELECT dm.name_id, nm.name, COUNT(*) AS movie_count
     FROM director_mapping dm
@@ -571,7 +612,11 @@ SELECT name, movie_count, average_duration, total_votes
 FROM ranked_directors
 WHERE `rank` <= 9;
 
+
+
 -- 2nd option
+
+
 
 SELECT nm.name, COUNT(*) AS movie_count, AVG(m.duration) AS average_duration, SUM(r.total_votes) AS total_votes
 FROM director_mapping dm
@@ -582,22 +627,32 @@ GROUP BY dm.name_id, nm.name
 ORDER BY movie_count DESC
 LIMIT 9;
 
+
+
 /* Ans:
-name				movie_count	average_duration	total_votes
-A.L. Vijay			5			122.6				1754
-Andrew Jones		5			86.4				1989
-Chris Stokes		4			88					3664
-Justin Price		4			86.5				5343
-Jesse V. Johnson	4			95.75				14778
-Steven Soderbergh	4			100.25				171684
-Sion Sono			4			125.5				2972
-Özgür Bakar			4			93.5				1092
-Sam Liu				4			78					28557
+name		 movie_count	           average_duration	             total_votes
+A.L. Vijay		5			122.6				1754
+Andrew Jones		5		        86.4				1989
+Chris Stokes		4		        88				3664
+Justin Price		4		        86.5			        5343
+Jesse V. Johnson	4		        95.75			        14778
+Steven Soderbergh	4		        100.25			        171684
+Sion Sono		4			125.5				2972
+Özgür Bakar		4			93.5				1092
+Sam Liu			4			78				28557
 */
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 /*  Segment 7: Recommendations
+
+
 Based on the analysis, provide recommendations for the types of content Bolly Movies should focus on producing.
 */
+
+
 /* Ans: Based on the Analysis of the IMBd Movies, the recommendations for the types of content Bolly Movies should focus on producing is:-
 
           1. The 'Triller' genre has caught the highest attention and interest amongst the audience as the amount of 'Thriller' movies watched is good,
