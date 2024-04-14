@@ -2,7 +2,11 @@
 
 use imdb;
 ------ SEGMENT 1: Database - Tables, Columns, Relationships
+
+
 ----- Q1. What are the different tables in the database and how are they connected to each other in the database?
+
+
 /* Ans. The database contains the following tables:
 
 1. movie: This table stores information about movies. It has a primary key `id` and columns such as `title`, `year`, `date_published`, `duration`, `country`, `worlwide_gross_income`, `languages`, and `production_company`.
