@@ -1,6 +1,6 @@
 # IMDb-Movies-Analysis-using-SQL-Project
 
-use imdb;
+
 ------ SEGMENT 1: Database - Tables, Columns, Relationships
 
 
