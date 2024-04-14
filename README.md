@@ -19,8 +19,12 @@ These tables are connected to each other using foreign keys.
 The `movie_id` column in the genre, director_mapping, and role_mapping tables references the `id` column in the movie table. 
 The `name_id` column in the director_mapping and role_mapping tables references the `id` column in the names table. 
 These relationships allow for the association of movies with genres, directors, and actors/actresses.
+
 */
+
 ----- Q2. Find the total number of rows in each table of the schema.
+
+
 SELECT COUNT(*) AS total_rows FROM movie;   --- 7997 rows
 SELECT COUNT(*) AS total_rows FROM genre;   --- 14662 rows
 SELECT COUNT(*) AS total_rows FROM director_mapping; --- 3867 rows 
@@ -28,7 +32,10 @@ SELECT COUNT(*) AS total_rows FROM role_mapping; --- 15615 rows
 SELECT COUNT(*) AS total_rows FROM names;  --- 25735 rows
 SELECT COUNT(*) AS total_rows FROM ratings; --- 7997 rows
 
+
 ----- Q3. Identify which columns in the movie table have null values.
+
+
 SELECT 
     column_name
 FROM information_schema.columns
@@ -37,8 +44,14 @@ WHERE table_name = 'movie'
     
 --- Ans:-  Column Names: languages, production_company, title, worldwide_gross_income, year
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 ------- SEGMENT 2: Movie Release Trends
+
+
 ----- Q1. Determine the total number of movies released each year and analyse the month-wise trend.
+
+
 SELECT 
     YEAR(date_published) AS release_year,
     MONTH(date_published) AS release_month,
@@ -49,8 +62,14 @@ GROUP BY
     release_year, release_month
 ORDER BY
     release_year, release_month;
+
+    
 --- Ans: Majority of the movies are released in the months of Sept, Oct, Nov in 2018 & 2017. In 2017 there were 3052 movies released which was highest in 3 years. 
+
+
 ----- Q2. Calculate the number of movies produced in the USA or India in the year 2019.
+
+
 SELECT 
     COUNT(*) AS movie_count
 FROM
@@ -58,10 +77,19 @@ FROM
 WHERE
     (country = 'USA' OR country = 'India')
     AND year = 2019;
+
+    
 --- Ans: movie_count: 887
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 ------- SEGMENT 3: Production Statistics and Genre Analysis
+
+
 ----- Q1.Retrieve the unique list of genres present in the dataset.
+
+
 SELECT DISTINCT genre
 FROM genre;
 --- Ans: Genre; Drama, Fantasy, Triller, Comedy, Horror, Family, Romance, Adventure, Action, Sci-fi, Crime, Mystery, Others
@@ -71,8 +99,14 @@ FROM genre
 GROUP BY genre
 ORDER BY movie_count DESC
 LIMIT 1;
+
+
 --- Ans: Genre - Drama || Movie Count - 4285
+
+
 ----- Q3. Determine the count of movies that belong to only one genre.
+
+
 SELECT COUNT(*) AS movie_count
 FROM (
     SELECT movie_id
@@ -80,12 +114,20 @@ FROM (
     GROUP BY movie_id
     HAVING COUNT(*) = 1
 ) AS single_genre_movies;
+
+
 --- Ans: Movie Count - 3289
+
+
 ----- Q4. Calculate the average duration of movies in each genre.
+
+
 SELECT genre, AVG(duration) AS average_duration
 FROM movie
 JOIN genre ON movie.id = genre.movie_id
 GROUP BY genre;
+
+
 /* Ans: genre	 	average_duration
 		Drama	 	106.7746
 		Fantasy	 	105.1404
@@ -100,8 +142,12 @@ GROUP BY genre;
 		Crime		107.0517
 		Mystery		101.8
 		Others		100.16
+
+  
 */
 ----- Q5. Find the rank of the 'thriller' genre among all genres in terms of the number of movies produced.
+
+
 SELECT genre, movie_count, genre_rank
 FROM (
     SELECT genre, COUNT(*) AS movie_count,
@@ -110,42 +156,63 @@ FROM (
     GROUP BY genre
 ) AS genre_counts
 WHERE genre = 'thriller';
+
+
 --- Ans: Triller || Movie Count - 1484 || Rank - 3
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 ------- SEGMENT 4: Ratings Analysis and Crew Members
 ----- Q1. Retrieve the minimum and maximum values in each column of the ratings table (except movie_id).
 SELECT MIN(avg_rating) AS min_avg_rating, MAX(avg_rating) AS max_avg_rating,
        MIN(total_votes) AS min_total_votes, MAX(total_votes) AS max_total_votes,
        MIN(median_rating) AS min_median_rating, MAX(median_rating) AS max_median_rating
 FROM ratings;
+
+
 --- Ans. Avg_rating : Min - 1.0 || Max - 10.0
 		 total_votes: Min - 100 || Max - 725138
          median_rating: Min - 1 || Max - 10
+	 
 
 ----- Q2. Identify the top 10 movies based on average rating.
+
+
 SELECT id, title, avg_rating
 FROM movie
 INNER JOIN ratings ON movie.id = ratings.movie_id
 ORDER BY avg_rating DESC
 LIMIT 10;
+
+
 /* Ans: 
-id			title								avg_rating
-tt10914342	Kirket								10
-tt6735740	Love in Kilnerry					10
-tt9537008	Gini Helida Kathe					9.8
-tt10370434	Runam								9.7
-tt10867504	Fan									9.6
-tt9526826	Android Kunjappan Version 5.25		9.6
-tt10869474	Safe								9.5
+id			title				    avg_rating
+tt10914342	Kirket						10
+tt6735740	Love in Kilnerry				10
+tt9537008	Gini Helida Kathe				9.8
+tt10370434	Runam						9.7
+tt10867504	Fan						9.6
+tt9526826	Android Kunjappan Version 5.25		        9.6
+tt10869474	Safe						9.5
 tt10901588	The Brighton Miracle				9.5
 tt9680166	Yeh Suhaagraat Impossible			9.5
-tt10405902	Shibu								9.4
+tt10405902	Shibu						9.4
 */
+
+
 ----- Q3 Summarise the ratings table based on movie counts by median ratings.
+
+
 SELECT median_rating, COUNT(movie_id) AS movie_count
 FROM ratings
 GROUP BY median_rating;
+
+
 /* Ans:
+
+
 median_rating	movie_count
 8				1030
 7				2257
@@ -158,7 +225,11 @@ median_rating	movie_count
 10				346
 1				94
 */
+
+
 ----- Q4. Identify the production house that has produced the most number of hit movies (average rating > 8).
+
+
 SELECT COUNT(movie.id) AS hit_movie_count, movie.production_company, AVG(ratings.avg_rating) AS average_rating
 FROM movie
 INNER JOIN ratings ON movie.id = ratings.movie_id
@@ -166,9 +237,15 @@ WHERE ratings.avg_rating > 8 AND movie.production_company IS NOT NULL
 GROUP BY movie.production_company
 ORDER BY hit_movie_count DESC
 Limit 1;
+
+
 --- Ans: production_company:- Dream Warrior Picture || Hit_movie_count:- 3 || average_rating:- 8.63333
 
+
+
 ----- Q5. Determine the number of movies released in each genre during March 2017 in the USA with more than 1,000 votes.
+
+
 
 SELECT genre.genre, COUNT(movie.id) AS movie_count
 FROM movie
@@ -180,6 +257,8 @@ WHERE movie.country = 'USA'
   AND ratings.total_votes > 1000
 GROUP BY genre.genre
 ORDER BY movie_count DESC;
+
+
 /* Ans:
 genre		movie_count
 Drama		16
@@ -194,7 +273,11 @@ Fantasy		2
 Mystery		2
 Family		1
 */
+
+
 ----- Q6. Retrieve movies of each genre starting with the word 'The' and having an average rating > 8.
+
+
 SELECT COUNT(g.movie_id) AS movie_count, g.genre
 FROM genre g
 INNER JOIN (
@@ -204,6 +287,8 @@ INNER JOIN (
     WHERE r.avg_rating > 8 AND m.title LIKE 'The%'
 ) AS sub ON g.movie_id = sub.id
 GROUP BY g.genre;
+
+
 /* Ans: 
 movie_count	genre
 7			Drama
@@ -214,16 +299,28 @@ movie_count	genre
 1			Thriller
 1			Romance
 */
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 ------- SEGMENT 5: Crew Analysis
 ----- Q1. Identify the columns in the names table that have null values.
+
+
 SELECT COLUMN_NAME
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME = 'names' 
 AND IS_NULLABLE = 'YES';
+
+
 --- Ans: Columns with Null Values are:- date_of_birth, height, known_for_movies, name
 
+
+
 ----- Q2. Determine the top three directors in the top three genres with movies having an average rating > 8.
+
+
 SELECT genre.genre AS top_genre, AVG(ratings.avg_rating) AS highest_rated, names.name AS director_name
 FROM movie
 INNER JOIN ratings ON movie.id = ratings.movie_id
@@ -234,6 +331,8 @@ WHERE ratings.avg_rating > 8
 GROUP BY top_genre, director_name
 ORDER BY highest_rated DESC
 LIMIT 3;
+
+
 /* Ans: 
 top_genre	highest_rated	director_name
 Romance		9.7				Srinivas Gundareddy
@@ -241,7 +340,11 @@ Drama		9.6				Balavalli Darshith Bhat
 Action		9.5				Pradeep Kalipurayath
 */
 
+
+
 ----- Q3. Find the top two actors whose movies have a median rating >= 8.
+
+
 SELECT names.name AS actor_name, AVG(ratings.median_rating) AS average_median_rating
 FROM names
 INNER JOIN role_mapping ON names.id = role_mapping.name_id
@@ -250,27 +353,39 @@ GROUP BY actor_name
 HAVING AVG(ratings.median_rating) >= 8
 ORDER BY average_median_rating DESC
 LIMIT 2;
+
+
 /* Ans:
 rating	name
 10		Aamir Qureshi
 10		Aarav Mavi
 */
 
+
+
 ----- Q4. Identify the top three production houses based on the number of votes received by their movies.
+
+
 SELECT movie.production_company, SUM(ratings.total_votes) AS total_votes
 FROM movie
 INNER JOIN ratings ON movie.id = ratings.movie_id
 GROUP BY movie.production_company
 ORDER BY total_votes DESC
 LIMIT 3;
+
+
 /* Ans:
 production_company			total_votes
 Marvel Studios				2656967
-Twentieth Century Fox		411163
+Twentieth Century Fox		        411163
 Warner Bros.				2396057
 */
 
+
+
 ----- Q5. Rank actors based on their average ratings in Indian movies released in India.
+
+
 SELECT names.name AS actor_name, AVG(ratings.avg_rating) AS average_rating
 FROM movie
 INNER JOIN role_mapping ON movie.id = role_mapping.movie_id
